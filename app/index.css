@@ -1,0 +1,97 @@
+body {
+    background: yellow;
+}
+
+.gameContainer {
+    height: 500px;
+    width: 500px;
+    background-color: #e8e8e8;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-self: center;
+    margin: auto;
+}
+
+.button1  {
+            height: 200px;
+            width: 200px;
+            background: green;
+            border-radius: 200px 0px 200px 0px;
+            position: absolute;
+            z-index: 1;
+            left: 3%;
+            top: 2%;
+        }
+
+.button2  {
+            height: 200px;
+            width: 200px;
+            background: blue;
+           border-radius: 0px 200px 0px 200px;
+            position: absolute;
+            z-index: 1;
+            left: 57%;
+            top: 2%;
+            color: green;
+        }
+
+.button3  {
+            height: 200px;
+            width: 200px;
+            background: red;
+           border-radius: 0px 200px 0px 200px;
+            position: absolute;
+            z-index: 1;
+            left: 3%;
+            top: 57%;
+        }
+
+.button4  {
+            height: 200px;
+            width: 200px;
+            background: yellow;
+           border-radius: 200px 0px 200px 0px;
+            position: absolute;
+            z-index: 1;
+            left: 57%;
+            top: 57%;
+        }
+
+.restartButton {
+    height: 45px;
+    width: 60px;
+    background-color: blue;
+    border-radius: 10px;
+    padding: 5px;
+    font-weight: 600;
+    position: absolute;
+    left: 45%;
+    bottom: 36%;
+    border: 2px solid black;
+}
+.startButton {
+    height: 45px;
+    width: 45px;
+    background-color: red;
+    border-radius: 50%;
+    padding: 5px;
+    font-weight: 600;
+    position: absolute;
+    left: 50%;
+    bottom: 51%;
+    border: 2px solid black;
+}
+
+.strictButton {
+    height: 45px;
+    width: 45px;
+    background-color: blue;
+    border-radius: 50%;
+    padding: 5px;
+    font-weight: 600;
+    position: absolute;
+    left: 60%;
+    bottom: 51%;
+    border: 2px solid black;
+}
