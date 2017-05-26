@@ -54,6 +54,10 @@
             top: 57%;
         }
 
+.buttonFlash{
+    background: #fff;
+}
+
 .restartButton {
     height: 45px;
     width: 60px;

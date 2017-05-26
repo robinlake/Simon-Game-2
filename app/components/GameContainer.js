@@ -2,6 +2,11 @@ var React = require('react');
 
 
 
+var moveAudio1 = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3');
+var moveAudio2 = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3');
+var moveAudio3 = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3');
+var moveAudio4 = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3');
+
 
 export class GameContainer extends React.Component {
     constructor(props){
@@ -17,7 +22,12 @@ export class GameContainer extends React.Component {
         this.incrementUsedMoves = this.incrementUsedMoves.bind(this);
         this.checkMoves = this.checkMoves.bind(this);
         this.toggleGameOnOff = this.toggleGameOnOff.bind(this);
+        this.makeNewMove = this.makeNewMove.bind(this);
+        this.startNewLevel = this.startNewLevel.bind(this);
+        this.resetUsedMoves = this.resetUsedMoves.bind(this);
     }
+
+
 
     resetMoves(){
         this.setState(function(){
@@ -69,12 +79,16 @@ export class GameContainer extends React.Component {
     }
 
     checkMoveCorrectness(input){
-        var newMovesArray = this.state.usedMoves.push(input);
-        for(let i = 0; i < newMovesArray.length; i++){
-            if (this.state.usedMoves[i] !== this.state.targetMoves[i]){
+        var testArray = JSON.parse(JSON.stringify(this.state.usedMoves));
+        console.log(testArray);
+
+        testArray.push(input);
+        for(let i = 0; i < testArray.length; i++){
+            if (testArray[i] !== this.state.targetMoves[i]){
                 return false;
             }
         }
+        console.log('true');
         return true;
     }
 
@@ -95,19 +109,81 @@ export class GameContainer extends React.Component {
         console.log('moves ' + this.state.usedMoves);
     }
 
+    makeNewMove(input){
+        if(this.checkMoveCorrectness(input) === true){ 
+            this.incrementUsedMoves(input);
+            this.playSound(input);
+            if(this.checkLevelComplete() === true){ /*something is not right here */
+                console.log('level was checked');
+                this.startNewLevel();
+            }
+        }else{
+            console.log('false');
+            this.resetUsedMoves();
+            this.playSound(input);
+        }
+    }
+
+    playSound(input){
+        var audio = moveAudio2;
+        switch(input){
+            case 1:
+            audio = moveAudio1;
+            break;
+            case 2:
+            audio = moveAudio2;
+            break;
+            case 3:
+            audio = moveAudio3;
+            break;
+            case 4:
+            audio = moveAudio4;
+            break;
+        }
+        audio.play();
+    }
+
+    checkLevelComplete(){
+        if(this.state.usedMoves.length === this.state.targetMoves.length){
+            for(let i=0; i<this.state.usedMoves.length; i++){
+                if(this.state.usedMoves[i] !== this.state.targetMoves[i]){
+                    console.log('arrays do not match');
+                    return false;
+                }
+                console.log('level complete');
+                return true;
+            }
+        }
+        console.log('level not complete');
+        return false;
+    }
+
+    startNewLevel(){
+        this.incrementTargetMoves();
+        this.resetUsedMoves();
+    }
+
+    resetUsedMoves(){
+        this.setState(function(){
+            return {
+                usedMoves: []
+            }
+        });
+    }
+
     render(){
         return(
             <div className="gameContainer">
                 moves:{this.state.usedMoves} game: {this.state.game}
-                <button className="button1" onClick={() =>{this.incrementUsedMoves(1)}}>Click Me</button>
-                <button className="button2" onClick={() =>{this.incrementUsedMoves(2)}}>Click Me</button>
-                <button className="button3" onClick={() =>{this.incrementUsedMoves(3)}}>Click Me</button>
-                <button className="button4" onClick={() =>{this.incrementUsedMoves(4)}}>Click Me</button>
+                <button className="button1" onClick={() =>{this.makeNewMove(1)}}>Click Me</button>
+                <button className="button2" onClick={() =>{this.makeNewMove(2)}}>Click Me</button>
+                <button className="button3" onClick={() =>{this.makeNewMove(3)}}>Click Me</button>
+                <button className="button4" onClick={() =>{this.makeNewMove(4)}}>Click Me</button>
                 <button className="restartButton" onClick={this.resetMoves}>Restart</button>
                 <button className="strictButton" onClick={this.checkMoves}>Strict</button>
                 <button className="startButton" onClick={this.startGame}>Start</button>
-                <div className="scoreCount">{this.state.usedMoves.length}</div>
-                <button onClick={this.toggleGameOnOff}>increment target moves</button>
+                <div className="scoreCount">{this.state.targetMoves.length}</div>
+                <button onClick={() =>{this.checkLevelComplete()}}>increment target moves</button>
             </div>
         )
     }
