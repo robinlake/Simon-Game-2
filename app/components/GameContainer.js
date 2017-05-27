@@ -25,6 +25,9 @@ export class GameContainer extends React.Component {
         this.makeNewMove = this.makeNewMove.bind(this);
         this.startNewLevel = this.startNewLevel.bind(this);
         this.resetUsedMoves = this.resetUsedMoves.bind(this);
+        this.toggleFlash = this.toggleFlash.bind(this);
+        this.flashOnAndOff = this.flashOnAndOff.bind(this);
+        this.flashTargetMoves = this.flashTargetMoves.bind(this);
     }
 
 
@@ -110,12 +113,15 @@ export class GameContainer extends React.Component {
     }
 
     makeNewMove(input){
+        var button = 'button' + input;
+        this.flashOnAndOff(button);
         if(this.checkMoveCorrectness(input) === true){ 
             this.incrementUsedMoves(input);
             this.playSound(input);
             if(this.checkLevelComplete() === true){ /*something is not right here */
                 console.log('level was checked');
                 this.startNewLevel();
+                this.flashTargetMoves();
             }
         }else{
             console.log('false');
@@ -171,19 +177,44 @@ export class GameContainer extends React.Component {
         });
     }
 
+    toggleFlash(input){ /* not finished, get it done */ 
+        var targetedButton = document.getElementById(input);
+        targetedButton.classList.toggle('buttonFlash');
+        //console.log(input);
+    }
+
+    flashOnAndOff(input){
+        this.toggleFlash(input);
+        setTimeout(this.toggleFlash, 500, input);
+    }
+
+
+
+    flashTargetMoves(){
+        var that = this;
+        var buttonId = "button";
+        for(let i=0; i< that.state.targetMoves.length; i++){
+            (function(){
+                var j = i;
+                setTimeout(that.flashOnAndOff, 500,(buttonId + that.state.targetMoves[j]));
+                console.log('pressed button = ' + that.state.targetMoves[j]);
+            })();
+        }
+    }
+
     render(){
         return(
             <div className="gameContainer">
                 moves:{this.state.usedMoves} game: {this.state.game}
-                <button className="button1" onClick={() =>{this.makeNewMove(1)}}>Click Me</button>
-                <button className="button2" onClick={() =>{this.makeNewMove(2)}}>Click Me</button>
-                <button className="button3" onClick={() =>{this.makeNewMove(3)}}>Click Me</button>
-                <button className="button4" onClick={() =>{this.makeNewMove(4)}}>Click Me</button>
+                <button id="button1" className="button1" onClick={() =>{this.makeNewMove(1)}}>Click Me</button>
+                <button id="button2" className="button2" onClick={() =>{this.makeNewMove(2)}}>Click Me</button>
+                <button id="button3" className="button3" onClick={() =>{this.makeNewMove(3)}}>Click Me</button>
+                <button id="button4" className="button4" onClick={() =>{this.makeNewMove(4)}}>Click Me</button>
                 <button className="restartButton" onClick={this.resetMoves}>Restart</button>
                 <button className="strictButton" onClick={this.checkMoves}>Strict</button>
                 <button className="startButton" onClick={this.startGame}>Start</button>
                 <div className="scoreCount">{this.state.targetMoves.length}</div>
-                <button onClick={() =>{this.checkLevelComplete()}}>increment target moves</button>
+                <button onClick={() =>{this.flashTargetMoves()}}>increment target moves</button>
             </div>
         )
     }

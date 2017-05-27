@@ -55,7 +55,7 @@
         }
 
 .buttonFlash{
-    background: #fff;
+    background: #fff !important;
 }
 
 .restartButton {
